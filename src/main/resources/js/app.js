@@ -8,14 +8,14 @@ var App = React.createClass({
     },
     connect: function () {
         var that = this;
-        var socket = new SockJS('/hello');
+        var socket = new SockJS('/message');
         this.stompClient = Stomp.over(socket);
         this.stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             that.setState({connected: true});
-            that.stompClient.subscribe('/topic/greetings', function (greeting) {
+            that.stompClient.subscribe('/chat/messages', function (message) {
                 var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(greeting.body).content);
+                messages.push(JSON.parse(message.body).content);
                 that.setState({messages: messages});
             });
         });
@@ -31,7 +31,7 @@ var App = React.createClass({
         this.setState({input: event.target.value});
     },
     send: function () {
-        this.stompClient.send("/app/hello", {}, JSON.stringify({name: this.state.input}));
+        this.stompClient.send("/messaging/message", {}, JSON.stringify({content: this.state.input}));
     },
     render: function () {
         return <div>
@@ -43,8 +43,8 @@ var App = React.createClass({
             <input type="text" onChange={this.handleInput}/>
             <input type="button" value="Send" onClick={this.send}/>
             <ul>
-                {this.state.messages.map(function (message) {
-                    return <li>{message}</li>
+                {this.state.messages.map(function (message, index) {
+                    return <li key={index}>{message}</li>
                 })}
             </ul>
         </div>;
