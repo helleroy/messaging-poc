@@ -4,7 +4,20 @@ var React = require('react');
 
 var App = React.createClass({
     getInitialState: function () {
-        return {messages: [], connected: false, input: ''};
+        return {messages: [], users: [], connected: false, input: ''};
+    },
+    componentDidMount: function () {
+        this.getUsers();
+        this.connect();
+    },
+    getUsers: function () {
+        var r = new XMLHttpRequest();
+        r.open("GET", "/users");
+        r.onreadystatechange = function () {
+            if (r.readyState != 4 || r.status != 200) return;
+            this.setState({users: JSON.parse(r.responseText)});
+        }.bind(this);
+        r.send();
     },
     connect: function () {
         var that = this;
@@ -17,6 +30,11 @@ var App = React.createClass({
                 var messages = that.state.messages.slice(0);
                 messages.push(JSON.parse(message.body).content);
                 that.setState({messages: messages});
+            });
+            that.stompClient.subscribe('/chat/users', function (message) {
+                var users = that.state.users.slice(0);
+                users.push(JSON.parse(message.body));
+                that.setState({users: users});
             });
         });
     },
@@ -35,18 +53,30 @@ var App = React.createClass({
     },
     render: function () {
         return <div>
-            <p>Connected: {this.state.connected ? 'Yes' : 'No'}</p>
-            <input type="button"
-                   value={this.state.connected ? "Disconnect" : "Connect"}
-                   onClick={this.state.connected ? this.disconnect : this.connect}/>
-
+            <p>
+                Connected: {this.state.connected ? 'Yes' : 'No'}&nbsp;
+                <input type="button"
+                       value={this.state.connected ? "Disconnect" : "Reconnect"}
+                       onClick={this.state.connected ? this.disconnect : this.connect}/>
+            </p>
             <input type="text" onChange={this.handleInput}/>
             <input type="button" value="Send" onClick={this.send}/>
-            <ul>
-                {this.state.messages.map(function (message, index) {
-                    return <li key={index}>{message}</li>
-                })}
-            </ul>
+            <section>
+                Messages:
+                <ul>
+                    {this.state.messages.map(function (message, index) {
+                        return <li key={index}>{message}</li>
+                    })}
+                </ul>
+            </section>
+            <section>
+                Users:
+                <ul>
+                    {this.state.users.map(function (message, index) {
+                        return <li key={index}>{message}</li>
+                    })}
+                </ul>
+            </section>
         </div>;
     }
 });
