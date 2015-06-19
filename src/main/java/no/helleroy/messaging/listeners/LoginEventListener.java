@@ -1,6 +1,6 @@
 package no.helleroy.messaging.listeners;
 
-import no.helleroy.messaging.domain.UserLoginMessage;
+import no.helleroy.messaging.domain.ConnectionMessage;
 import no.helleroy.messaging.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -15,6 +15,6 @@ public class LoginEventListener implements ApplicationListener<InteractiveAuthen
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
-        userService.sendUserLoginMessage(new UserLoginMessage(event.getAuthentication().getName(), true));
+        userService.sendUserLoginMessage(new ConnectionMessage(event.getAuthentication().getName(), true));
     }
 }

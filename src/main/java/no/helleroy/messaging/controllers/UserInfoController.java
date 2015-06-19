@@ -1,6 +1,6 @@
 package no.helleroy.messaging.controllers;
 
-import no.helleroy.messaging.domain.UserLoginMessage;
+import no.helleroy.messaging.domain.ConnectionMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
@@ -18,11 +18,11 @@ public class UserInfoController {
     private SessionRegistry sessionRegistry;
 
     @RequestMapping("/users")
-    public List<UserLoginMessage> users() {
+    public List<ConnectionMessage> users() {
         return sessionRegistry.getAllPrincipals()
                 .stream()
                 .map(User.class::cast)
-                .map(u -> new UserLoginMessage(u.getUsername(), true))
+                .map(u -> new ConnectionMessage(u.getUsername(), true))
                 .collect(toList());
     }
 }

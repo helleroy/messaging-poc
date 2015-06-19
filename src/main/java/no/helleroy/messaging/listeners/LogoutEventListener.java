@@ -1,6 +1,6 @@
 package no.helleroy.messaging.listeners;
 
-import no.helleroy.messaging.domain.UserLoginMessage;
+import no.helleroy.messaging.domain.ConnectionMessage;
 import no.helleroy.messaging.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -15,6 +15,6 @@ public class LogoutEventListener implements ApplicationListener<SessionDestroyed
 
     @Override
     public void onApplicationEvent(SessionDestroyedEvent event) {
-        userService.sendUserLoginMessage(new UserLoginMessage(event.getId(), false));
+        userService.sendUserLoginMessage(new ConnectionMessage(event.getId(), false));
     }
 }
