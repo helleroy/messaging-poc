@@ -11,9 +11,9 @@ var uglify = require('gulp-uglify');
 var streamify = require('gulp-streamify');
 
 var jsSrcDir = './src/main/resources/js/';
-var jsBuildDir = './src/main/resources/static/build/js/';
+var jsBuildDir = './src/main/resources/static/js/';
 var lessSrcDir = './src/main/resources/less/';
-var cssBuildDir = './src/main/resources/static/build/css/';
+var cssBuildDir = './src/main/resources/static/css/';
 
 function handleErrors() {
     var args = Array.prototype.slice.call(arguments);

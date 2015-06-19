@@ -1,6 +1,7 @@
 node_modules/
 target/
 .idea/
-src/main/resources/static/build
+src/main/resources/static/css
+src/main/resources/static/js
 
 *.iml

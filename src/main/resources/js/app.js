@@ -48,8 +48,11 @@ var App = React.createClass({
     handleInput: function (event) {
         this.setState({input: event.target.value});
     },
-    send: function () {
+    send: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         this.stompClient.send("/messaging/message", {}, JSON.stringify({content: this.state.input}));
+        this.setState({input: ''});
     },
     render: function () {
         return <div>
@@ -59,8 +62,11 @@ var App = React.createClass({
                        value={this.state.connected ? "Disconnect" : "Reconnect"}
                        onClick={this.state.connected ? this.disconnect : this.connect}/>
             </p>
-            <input type="text" onChange={this.handleInput}/>
-            <input type="button" value="Send" onClick={this.send}/>
+
+            <form onSubmit={this.send}>
+                <input type="text" value={this.state.input} onChange={this.handleInput}/>&nbsp;
+                <input type="submit" value="Send"/>
+            </form>
             <section>
                 Messages:
                 <ul>
