@@ -28,10 +28,5 @@ public class UserInfoController {
                 .map(u -> new ConnectionMessage(u.getUsername(), true))
                 .collect(toList());
     }
-
-    @RequestMapping("/myself")
-    public Object myself(Principal principal) {
-        return ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-    }
 }
 

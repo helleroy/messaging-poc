@@ -4,7 +4,7 @@ var React = require('react');
 
 var App = React.createClass({
     getInitialState: function () {
-        return {messages: [], users: [], connected: false, input: ''};
+        return {messages: [], users: [], connected: false, input: '', toUser: ''};
     },
     componentDidMount: function () {
         this.getUsers();
@@ -31,6 +31,11 @@ var App = React.createClass({
                 messages.push(JSON.parse(message.body).content);
                 that.setState({messages: messages});
             });
+            that.stompClient.subscribe('/user/chat/messages', function (message) {
+                var messages = that.state.messages.slice(0);
+                messages.push(JSON.parse(message.body).content);
+                that.setState({messages: messages});
+            });
             that.stompClient.subscribe('/chat/users', function (message) {
                 var users = that.state.users.slice(0);
                 users.push(JSON.parse(message.body));
@@ -45,13 +50,18 @@ var App = React.createClass({
         this.setState({connected: false});
         console.log("Disconnected");
     },
-    handleInput: function (event) {
+    handleUsernameInput: function (event) {
+        this.setState({toUser: event.target.value});
+    },
+    handleChatInput: function (event) {
         this.setState({input: event.target.value});
     },
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        this.stompClient.send("/messaging/message", {}, JSON.stringify({content: this.state.input}));
+        var channel = '/messaging/message';
+        channel += this.state.toUser.length !== 0 ? '.user.' + this.state.toUser : '';
+        this.stompClient.send(channel, {}, JSON.stringify({content: this.state.input}));
         this.setState({input: ''});
     },
     render: function () {
@@ -64,7 +74,14 @@ var App = React.createClass({
             </p>
 
             <form onSubmit={this.send}>
-                <input type="text" value={this.state.input} onChange={this.handleInput}/>&nbsp;
+                <label>
+                    <p>Send to user</p>
+                    <input type="text" value={this.state.toUser} onChange={this.handleUsernameInput}/>
+                </label>
+                <label>
+                    <p>Message</p>
+                    <input type="text" value={this.state.input} onChange={this.handleChatInput}/>&nbsp;
+                </label>
                 <input type="submit" value="Send"/>
             </form>
             <section>
