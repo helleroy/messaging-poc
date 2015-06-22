@@ -22,7 +22,7 @@ public class ChatController {
     }
 
     @MessageMapping("/message.user.{username}")
-    public void messageToUser(@DestinationVariable("username") String username, ChatMessage message) {
+    public void messageToUser(@DestinationVariable String username, ChatMessage message) {
         chatService.sendToUser(username, message);
     }
 
