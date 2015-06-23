@@ -1,34 +1,27 @@
 package no.helleroy.messaging.controllers;
 
-import no.helleroy.messaging.domain.ConnectionMessage;
+import no.helleroy.messaging.components.UserRegistry;
+import no.helleroy.messaging.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 public class UserInfoController {
 
-    private SessionRegistry sessionRegistry;
+    private UserRegistry userRegistry;
 
     @Autowired
-    public UserInfoController(SessionRegistry sessionRegistry) {
-        this.sessionRegistry = sessionRegistry;
+    public UserInfoController(UserRegistry userRegistry) {
+        this.userRegistry = userRegistry;
     }
 
     @RequestMapping
-    public List<ConnectionMessage> users() {
-        return sessionRegistry.getAllPrincipals()
-                .stream()
-                .map(User.class::cast)
-                .map(u -> new ConnectionMessage(u.getUsername(), true))
-                .collect(toList());
+    public Map<String, User> users() {
+        return userRegistry.users;
     }
 }
 

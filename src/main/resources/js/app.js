@@ -7,8 +7,8 @@ var App = React.createClass({
         return {messages: [], users: [], connected: false, input: '', toUser: ''};
     },
     componentDidMount: function () {
-        this.getUsers();
         this.connect();
+        this.getUsers();
     },
     getUsers: function () {
         var r = new XMLHttpRequest();
@@ -37,9 +37,13 @@ var App = React.createClass({
                 that.setState({messages: messages});
             });
             that.stompClient.subscribe('/chat/users', function (message) {
-                var users = that.state.users.slice(0);
-                users.push(JSON.parse(message.body));
-                that.setState({users: users});
+                var connectionMessage = JSON.parse(message.body);
+                if (connectionMessage.connected) {
+                    that.state.users[connectionMessage.user.name] = connectionMessage.user;
+                } else {
+                    delete that.state.users[connectionMessage.user.name];
+                }
+                that.setState({users: that.state.users});
             });
         });
     },
@@ -95,9 +99,9 @@ var App = React.createClass({
             <section>
                 Users:
                 <ul>
-                    {this.state.users.map(function (message, index) {
-                        return <li key={index}>{message}</li>
-                    })}
+                    {Object.keys(this.state.users).map(function (user) {
+                        return <li key={user}>{this.state.users[user].name}</li>
+                    }.bind(this))}
                 </ul>
             </section>
         </div>;

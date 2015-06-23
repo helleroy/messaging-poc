@@ -2,16 +2,16 @@ package no.helleroy.messaging.domain;
 
 public class ConnectionMessage {
 
-    private String username;
+    private User user;
     private boolean connected;
 
-    public ConnectionMessage(String username, boolean connected) {
-        this.username = username;
+    public ConnectionMessage(User user, boolean connected) {
+        this.user = user;
         this.connected = connected;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
     public boolean isConnected() {
