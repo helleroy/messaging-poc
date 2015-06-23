@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginEventListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public LoginEventListener(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {

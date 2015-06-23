@@ -2,13 +2,11 @@ package no.helleroy.messaging.controllers;
 
 import no.helleroy.messaging.domain.ConnectionMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -17,8 +15,12 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/users")
 public class UserInfoController {
 
-    @Autowired
     private SessionRegistry sessionRegistry;
+
+    @Autowired
+    public UserInfoController(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
 
     @RequestMapping
     public List<ConnectionMessage> users() {

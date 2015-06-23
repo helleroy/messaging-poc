@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogoutEventListener implements ApplicationListener<SessionDestroyedEvent> {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public LogoutEventListener(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void onApplicationEvent(SessionDestroyedEvent event) {
