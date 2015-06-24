@@ -63,8 +63,10 @@ var App = React.createClass({
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        var channel = '/messaging/message';
-        channel += this.state.toUser.length !== 0 ? '.user.' + this.state.toUser : '';
+        var prefix = '/messaging';
+        prefix += this.state.toUser.length !== 0 ? '/user/' + this.state.toUser : ''
+        var channel = '/message';
+        channel = prefix + channel;
         this.stompClient.send(channel, {}, JSON.stringify({content: this.state.input}));
         this.setState({input: ''});
     },

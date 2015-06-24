@@ -25,7 +25,7 @@ public class ChatController {
         return message;
     }
 
-    @MessageMapping("/message.user.{username}")
+    @MessageMapping("/user/{username}/message")
     public void messageToUser(@DestinationVariable String username, ChatMessage message) {
         chatService.sendToUser(username, message);
     }
