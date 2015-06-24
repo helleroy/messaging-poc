@@ -1,7 +1,6 @@
-package no.helleroy.messaging.controllers;
+package no.helleroy.messaging.clients.inbound;
 
 import no.helleroy.messaging.domain.ChatMessage;
-import no.helleroy.messaging.flux.RegisterablePublisher;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 
 @Controller
-public class ChatController extends RegisterablePublisher<ChatMessage> {
+public class ChatController extends InboundClient<ChatMessage> {
 
     @MessageMapping("/message")
     public void message(ChatMessage message, Principal principal) {

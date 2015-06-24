@@ -1,4 +1,4 @@
-package no.helleroy.messaging.clients;
+package no.helleroy.messaging.clients.outbound;
 
 import no.helleroy.messaging.domain.ChatMessage;
 import no.helleroy.messaging.flux.Publisher;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 @Component
-public class ChatMessageWebSocketClient extends WebSocketClient<ChatMessage> {
+public class ChatMessageOutboundClient extends OutboundClient<ChatMessage> {
 
     private ChatService chatService;
 
     @Autowired
-    public ChatMessageWebSocketClient(ChatService chatService, ChatStore chatStore) {
+    public ChatMessageOutboundClient(ChatService chatService, ChatStore chatStore) {
         this.chatService = chatService;
         chatStore.register(this::publish);
     }

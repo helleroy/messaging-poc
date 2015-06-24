@@ -1,4 +1,4 @@
-package no.helleroy.messaging.clients;
+package no.helleroy.messaging.clients.outbound;
 
 import no.helleroy.messaging.domain.ConnectionMessage;
 import no.helleroy.messaging.flux.Publisher;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 @Component
-public class ConnectionMessageWebSocketClient extends WebSocketClient<ConnectionMessage> {
+public class ConnectionMessageOutboundClient extends OutboundClient<ConnectionMessage> {
 
     private UserService userService;
 
     @Autowired
-    public ConnectionMessageWebSocketClient(UserService userService, UserStore userStore) {
+    public ConnectionMessageOutboundClient(UserService userService, UserStore userStore) {
         this.userService = userService;
         subscribe(userStore);
     }
