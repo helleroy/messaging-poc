@@ -28,12 +28,12 @@ var App = React.createClass({
             that.setState({connected: true});
             that.stompClient.subscribe('/chat/messages', function (message) {
                 var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body).message);
+                messages.push(JSON.parse(message.body));
                 that.setState({messages: messages});
             });
             that.stompClient.subscribe('/user/chat/messages', function (message) {
                 var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body).message);
+                messages.push(JSON.parse(message.body));
                 that.setState({messages: messages});
             });
             that.stompClient.subscribe('/chat/users', function (message) {
@@ -71,43 +71,44 @@ var App = React.createClass({
         this.setState({input: ''});
     },
     render: function () {
-        return <div>
-            <p>
+        return <div className="chat">
+            <section className="grid header">
                 Connected: {this.state.connected ? 'Yes' : 'No'}&nbsp;
                 <input type="button"
                        className="button-small"
                        value={this.state.connected ? "Disconnect" : "Reconnect"}
                        onClick={this.state.connected ? this.disconnect : this.connect}/>
-            </p>
-
-            <form onSubmit={this.send}>
-                <label>
-                    <p>Send to user</p>
-                    <input type="text" className="textfield" value={this.state.toUser}
-                           onChange={this.handleUsernameInput}/>
-                </label>
-                <label>
-                    <p>Message</p>
-                    <input type="text" className="textfield" value={this.state.input}
-                           onChange={this.handleChatInput}/>&nbsp;
-                </label>
-                <input type="submit" className="button-large" value="Send"/>
-            </form>
-            <section>
-                Messages:
-                <ul>
-                    {this.state.messages.map(function (message, index) {
-                        return <li key={index}>{message}</li>
-                    })}
-                </ul>
             </section>
-            <section>
-                Users:
-                <ul>
-                    {Object.keys(this.state.users).map(function (user) {
-                        return <li key={user}>{this.state.users[user].name}</li>
-                    }.bind(this))}
-                </ul>
+            <section className="grid">
+                <div className="col-1-5 module chat-users">
+                    <ul>
+                        {Object.keys(this.state.users).map(function (user) {
+                            return <li key={user}>{this.state.users[user].name}</li>
+                        }.bind(this))}
+                    </ul>
+                </div>
+                <div className="col-4-5">
+                    <div className="grid module chat-messages">
+                        <ul>
+                            {this.state.messages.map(function (message, index) {
+                                return <li key={index}>{message.sender + ': ' + message.message}</li>
+                            })}
+                        </ul>
+                    </div>
+                    <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
+                        <label>
+                            <p>Send to user</p>
+                            <input type="text" className="textfield" value={this.state.toUser}
+                                   onChange={this.handleUsernameInput}/>
+                        </label>
+                        <label>
+                            <p>Message</p>
+                            <input type="text" className="textfield" value={this.state.input}
+                                   onChange={this.handleChatInput}/>&nbsp;
+                        </label>
+                        <input type="submit" className="button-large" value="Send"/>
+                    </form>
+                </div>
             </section>
         </div>;
     }
