@@ -10,6 +10,6 @@ public class ChatStore extends Store<ChatMessage> {
 
     @Autowired
     public ChatStore(ChatActionConsumer chatActionConsumer) {
-        this.subscribe(chatActionConsumer);
+        subscribe(chatActionConsumer);
     }
 }

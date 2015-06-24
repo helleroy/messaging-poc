@@ -1,8 +1,7 @@
-package no.helleroy.messaging.client;
+package no.helleroy.messaging.clients;
 
 import no.helleroy.messaging.domain.ChatMessage;
 import no.helleroy.messaging.flux.Publisher;
-import no.helleroy.messaging.flux.Subscriber;
 import no.helleroy.messaging.services.ChatService;
 import no.helleroy.messaging.stores.ChatStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,14 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 @Component
-public class ChatMessageWebSocketClient implements Publisher<ChatMessage>, Subscriber<ChatMessage> {
+public class ChatMessageWebSocketClient extends WebSocketClient<ChatMessage> {
 
     private ChatService chatService;
 
     @Autowired
     public ChatMessageWebSocketClient(ChatService chatService, ChatStore chatStore) {
-        chatStore.register(this::publish);
         this.chatService = chatService;
+        chatStore.register(this::publish);
     }
 
     @Override

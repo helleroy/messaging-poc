@@ -10,6 +10,6 @@ public class ChatActionConsumer extends ActionConsumer<ChatMessage> {
 
     @Autowired
     public ChatActionConsumer(ChatController chatController) {
-        this.subscribe(chatController);
+        subscribe(chatController);
     }
 }

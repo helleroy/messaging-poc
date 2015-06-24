@@ -1,13 +1,14 @@
 package no.helleroy.messaging.services;
 
 import no.helleroy.messaging.domain.ConnectionMessage;
-import no.helleroy.messaging.domain.Destination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final String DESTINATION_USERS = "/chat/users";
 
     private SimpMessageSendingOperations messageTemplate;
 
@@ -18,6 +19,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendUserLoginMessage(ConnectionMessage message) {
-        messageTemplate.convertAndSend(Destination.Chat.USERS, message);
+        messageTemplate.convertAndSend(DESTINATION_USERS, message);
     }
 }

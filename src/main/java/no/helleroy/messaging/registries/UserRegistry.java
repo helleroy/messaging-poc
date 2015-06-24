@@ -1,4 +1,4 @@
-package no.helleroy.messaging.components;
+package no.helleroy.messaging.registries;
 
 import no.helleroy.messaging.domain.User;
 import org.springframework.stereotype.Component;
