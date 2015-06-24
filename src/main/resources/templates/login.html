@@ -7,25 +7,33 @@
     <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div class="login">
+    <div class="error" th:if="${param.error}">
+        Invalid username or password.
+    </div>
+    <div class="success" th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <div class="error" th:if="${param.expired}">
+        Your session has expired or you've logged in somewhere else.
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div class="login-form-element">
+            <label>
+                <p>User Name:</p>
+                <input class="textfield" type="text" name="username"/>
+            </label>
+        </div>
+        <div class="login-form-element">
+            <label>
+                <p>Password:</p>
+                <input class="textfield" type="password" name="password"/>
+            </label>
+        </div>
+        <div class="login-form-element">
+            <input class="button-large" type="submit" value="Sign In"/>
+        </div>
+    </form>
 </div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<div th:if="${param.expired}">
-    Your session has expired or you've logged in somewhere else.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label>
-        <p>User Name:</p>
-        <input type="text" name="username"/>
-    </label></div>
-    <div><label>
-        <p>Password:</p>
-        <input type="password" name="password"/>
-    </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
 </body>
 </html>

@@ -75,6 +75,7 @@ var App = React.createClass({
             <p>
                 Connected: {this.state.connected ? 'Yes' : 'No'}&nbsp;
                 <input type="button"
+                       className="button-small"
                        value={this.state.connected ? "Disconnect" : "Reconnect"}
                        onClick={this.state.connected ? this.disconnect : this.connect}/>
             </p>
@@ -82,13 +83,15 @@ var App = React.createClass({
             <form onSubmit={this.send}>
                 <label>
                     <p>Send to user</p>
-                    <input type="text" value={this.state.toUser} onChange={this.handleUsernameInput}/>
+                    <input type="text" className="textfield" value={this.state.toUser}
+                           onChange={this.handleUsernameInput}/>
                 </label>
                 <label>
                     <p>Message</p>
-                    <input type="text" value={this.state.input} onChange={this.handleChatInput}/>&nbsp;
+                    <input type="text" className="textfield" value={this.state.input}
+                           onChange={this.handleChatInput}/>&nbsp;
                 </label>
-                <input type="submit" value="Send"/>
+                <input type="submit" className="button-large" value="Send"/>
             </form>
             <section>
                 Messages:
