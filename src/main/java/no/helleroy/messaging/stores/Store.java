@@ -1,24 +1,18 @@
 package no.helleroy.messaging.stores;
 
-import no.helleroy.messaging.actionconsumers.ActionConsumer;
-import no.helleroy.messaging.flux.Reactive;
+import no.helleroy.messaging.flux.Publisher;
+import no.helleroy.messaging.flux.RegisterablePublisher;
+import no.helleroy.messaging.flux.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-public abstract class Store<T> implements Reactive<T> {
+public abstract class Store<T> extends RegisterablePublisher<T> implements Subscriber<T> {
 
     private final List<T> messages;
-    private final List<Consumer<T>> consumers;
 
     public Store() {
-        this(new ArrayList<>());
-    }
-
-    public Store(List<T> messages) {
-        this.messages = messages;
-        this.consumers = new ArrayList<>();
+        this.messages = new ArrayList<>();
     }
 
     public List<T> getMessages() {
@@ -26,14 +20,13 @@ public abstract class Store<T> implements Reactive<T> {
     }
 
     @Override
-    public void register(Consumer<T> consumer) {
-        consumers.add(consumer);
-    }
-
-    protected void publishMessage(T message) {
+    public void publish(T message) {
         messages.add(message);
-        consumers.forEach(f -> f.accept(message));
+        super.publish(message);
     }
 
-    protected abstract void subscribe(ActionConsumer<T> actionConsumer);
+    @Override
+    public void subscribe(Publisher<T> publisher) {
+        publisher.register(this::publish);
+    }
 }

@@ -28,12 +28,12 @@ var App = React.createClass({
             that.setState({connected: true});
             that.stompClient.subscribe('/chat/messages', function (message) {
                 var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body).content);
+                messages.push(JSON.parse(message.body).message);
                 that.setState({messages: messages});
             });
             that.stompClient.subscribe('/user/chat/messages', function (message) {
                 var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body).content);
+                messages.push(JSON.parse(message.body).message);
                 that.setState({messages: messages});
             });
             that.stompClient.subscribe('/chat/users', function (message) {
@@ -67,7 +67,7 @@ var App = React.createClass({
         prefix += this.state.toUser.length !== 0 ? '/user/' + this.state.toUser : ''
         var channel = '/message';
         channel = prefix + channel;
-        this.stompClient.send(channel, {}, JSON.stringify({content: this.state.input}));
+        this.stompClient.send(channel, {}, JSON.stringify({message: this.state.input}));
         this.setState({input: ''});
     },
     render: function () {

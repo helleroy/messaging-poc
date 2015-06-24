@@ -17,6 +17,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public void broadcast(ChatMessage message) {
+        messageTemplate.convertAndSend(Destination.Chat.MESSAGES, message);
+    }
+
+    @Override
     public void sendToUser(String username, ChatMessage message) {
         messageTemplate.convertAndSendToUser(username, Destination.Chat.MESSAGES, message);
     }
