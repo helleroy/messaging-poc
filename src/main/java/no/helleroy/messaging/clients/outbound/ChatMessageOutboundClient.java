@@ -29,6 +29,9 @@ public class ChatMessageOutboundClient extends OutboundClient<ChatMessage> {
     public void publish(ChatMessage message) {
         if (message.getReceiver() != null) {
             chatService.sendToUser(message.getReceiver(), message);
+            if (!message.getReceiver().equals(message.getSender())) {
+                chatService.sendToUser(message.getSender(), message);
+            }
         } else {
             chatService.broadcast(message);
         }

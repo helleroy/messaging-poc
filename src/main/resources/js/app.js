@@ -18,6 +18,15 @@ var App = React.createClass({
         }.bind(this);
         r.send();
     },
+    getMessages: function () {
+        var r = new XMLHttpRequest();
+        r.open("GET", "/messages");
+        r.onreadystatechange = function () {
+            if (r.readyState != 4 || r.status != 200) return;
+            this.setState({messages: JSON.parse(r.responseText)});
+        }.bind(this);
+        r.send();
+    },
     connect: function () {
         var that = this;
         var socket = new SockJS('/message');
@@ -46,6 +55,7 @@ var App = React.createClass({
             });
 
             that.getUsers();
+            that.getMessages();
         });
     },
     disconnect: function () {
