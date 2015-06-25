@@ -115,7 +115,9 @@ var App = React.createClass({
                     </div>
                     <div className="chat-form-wrapper">
                         <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
-                            Sending to {this.state.toUser.length !== 0 ? this.state.toUser : 'everyone'}
+                            <p>
+                                Sending to {this.state.toUser.length !== 0 ? this.state.toUser : 'everyone'}
+                            </p>
                             <input type="text" className="textfield textfield-message" value={this.state.input}
                                    onChange={this.handleChatInput}/>
                             <input type="submit" className="button-large button-send" value="Send"/>
