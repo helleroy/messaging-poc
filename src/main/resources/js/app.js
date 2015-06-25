@@ -79,7 +79,7 @@ var App = React.createClass({
                        value={this.state.connected ? "Disconnect" : "Reconnect"}
                        onClick={this.state.connected ? this.disconnect : this.connect}/>
             </section>
-            <section className="grid">
+            <section className="grid main">
                 <div className="col-1-5 module chat-users">
                     <ul>
                         {Object.keys(this.state.users).map(function (user) {
@@ -87,7 +87,7 @@ var App = React.createClass({
                         }.bind(this))}
                     </ul>
                 </div>
-                <div className="col-4-5">
+                <div className="col-4-5 chat-main">
                     <div className="grid module chat-messages">
                         <ul>
                             {this.state.messages.map(function (message, index) {
@@ -95,19 +95,21 @@ var App = React.createClass({
                             })}
                         </ul>
                     </div>
-                    <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
-                        <label>
-                            <p>Send to user</p>
-                            <input type="text" className="textfield" value={this.state.toUser}
-                                   onChange={this.handleUsernameInput}/>
-                        </label>
-                        <label>
-                            <p>Message</p>
-                            <input type="text" className="textfield" value={this.state.input}
-                                   onChange={this.handleChatInput}/>&nbsp;
-                        </label>
-                        <input type="submit" className="button-large" value="Send"/>
-                    </form>
+                    <div className="chat-form-wrapper">
+                        <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
+                            <label>
+                                <p>Send to user</p>
+                                <input type="text" className="textfield" value={this.state.toUser}
+                                       onChange={this.handleUsernameInput}/>
+                            </label>
+
+                            <div className="chat-form-element">
+                                <input type="text" className="textfield textfield-message" value={this.state.input}
+                                       onChange={this.handleChatInput}/>
+                                <input type="submit" className="button-large button-send" value="Send"/>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </section>
         </div>;
