@@ -8,7 +8,6 @@ var App = React.createClass({
     },
     componentDidMount: function () {
         this.connect();
-        this.getUsers();
     },
     getUsers: function () {
         var r = new XMLHttpRequest();
@@ -45,6 +44,8 @@ var App = React.createClass({
                 }
                 that.setState({users: that.state.users});
             });
+
+            that.getUsers();
         });
     },
     disconnect: function () {
