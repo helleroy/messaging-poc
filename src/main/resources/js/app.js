@@ -55,11 +55,14 @@ var App = React.createClass({
         this.setState({connected: false});
         console.log("Disconnected");
     },
-    handleUsernameInput: function (event) {
-        this.setState({toUser: event.target.value});
-    },
     handleChatInput: function (event) {
         this.setState({input: event.target.value});
+    },
+    updateToUser: function (user) {
+        var name = user.name === this.state.toUser ? '' : user.name;
+        return function () {
+            this.setState({toUser: name});
+        }.bind(this);
     },
     send: function (event) {
         event.stopPropagation();
@@ -81,10 +84,14 @@ var App = React.createClass({
                        onClick={this.state.connected ? this.disconnect : this.connect}/>
             </section>
             <section className="grid main">
-                <div className="col-1-5 module chat-users">
+                <div className="col-1-5 sidebar chat-users">
                     <ul>
                         {Object.keys(this.state.users).map(function (user) {
-                            return <li key={user}>{this.state.users[user].name}</li>
+                            return <li key={user}
+                                       className="sidebar-list-element"
+                                       onClick={this.updateToUser(this.state.users[user])}>
+                                {this.state.users[user].name}
+                            </li>
                         }.bind(this))}
                     </ul>
                 </div>
@@ -98,17 +105,10 @@ var App = React.createClass({
                     </div>
                     <div className="chat-form-wrapper">
                         <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
-                            <label>
-                                <p>Send to user</p>
-                                <input type="text" className="textfield" value={this.state.toUser}
-                                       onChange={this.handleUsernameInput}/>
-                            </label>
-
-                            <div className="chat-form-element">
-                                <input type="text" className="textfield textfield-message" value={this.state.input}
-                                       onChange={this.handleChatInput}/>
-                                <input type="submit" className="button-large button-send" value="Send"/>
-                            </div>
+                            Sending to {this.state.toUser.length !== 0 ? this.state.toUser : 'everyone'}
+                            <input type="text" className="textfield textfield-message" value={this.state.input}
+                                   onChange={this.handleChatInput}/>
+                            <input type="submit" className="button-large button-send" value="Send"/>
                         </form>
                     </div>
                 </div>
