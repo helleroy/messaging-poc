@@ -64,7 +64,7 @@ var App = React.createClass({
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        var prefix = '/messaging';
+        var prefix = '';
         prefix += this.state.toUser.length !== 0 ? '/user/' + this.state.toUser : ''
         var channel = '/message';
         channel = prefix + channel;
