@@ -4,7 +4,7 @@ var React = require('react');
 
 var App = React.createClass({
     getInitialState: function () {
-        return {messages: [], users: [], connected: false, input: '', toUser: ''};
+        return {messages: [], users: [], connected: false, input: '', selectedUser: ''};
     },
     componentDidMount: function () {
         this.connect();
@@ -69,16 +69,16 @@ var App = React.createClass({
         this.setState({input: event.target.value});
     },
     updateToUser: function (user) {
-        var name = user.name === this.state.toUser ? '' : user.name;
+        var name = user.name === this.state.selectedUser ? '' : user.name;
         return function () {
-            this.setState({toUser: name});
+            this.setState({selectedUser: name});
         }.bind(this);
     },
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
         var prefix = '';
-        prefix += this.state.toUser.length !== 0 ? '/user/' + this.state.toUser : ''
+        prefix += this.state.selectedUser.length !== 0 ? '/user/' + this.state.selectedUser : ''
         var channel = '/message';
         channel = prefix + channel;
         this.stompClient.send(channel, {}, JSON.stringify({message: this.state.input}));
@@ -87,7 +87,8 @@ var App = React.createClass({
     render: function () {
         return <div className="chat">
             <section className="grid header">
-                Connected: {this.state.connected ? 'Yes' : 'No'}&nbsp;
+                <span>Sending to: {this.state.selectedUser.length !== 0 ? '@' + this.state.selectedUser : '#everyone'}</span>
+                <span>Connected: {this.state.connected ? 'Yes' : 'No'}</span>
                 <input type="button"
                        className="button-small"
                        value={this.state.connected ? "Disconnect" : "Reconnect"}
@@ -115,9 +116,6 @@ var App = React.createClass({
                     </div>
                     <div className="chat-form-wrapper">
                         <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
-                            <p>
-                                Sending to {this.state.toUser.length !== 0 ? this.state.toUser : 'everyone'}
-                            </p>
                             <input type="text" className="textfield textfield-message" value={this.state.input}
                                    onChange={this.handleChatInput}/>
                             <input type="submit" className="button-large button-send" value="Send"/>
