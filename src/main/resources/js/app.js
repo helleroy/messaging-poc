@@ -1,88 +1,52 @@
-var SockJS = require('sockjs-client');
-var Stomp = require('stompjs');
 var React = require('react');
+
+var AppStore = require('./stores/AppStore');
+var AppActions = require('./actions/AppActions');
+var WebSocketAPIUtils = require('./utils/WebSocketAPIUtils');
+var WebAPIUtils = require('./utils/WebAPIUtils');
+
 
 var App = React.createClass({
     getInitialState: function () {
-        return {messages: [], users: [], connected: false, input: '', selectedUser: ''};
+        return AppStore.getState();
     },
     componentDidMount: function () {
+        AppStore.addChangeListener(this._onChange);
         this.connect();
     },
-    getUsers: function () {
-        var r = new XMLHttpRequest();
-        r.open("GET", "/users");
-        r.onreadystatechange = function () {
-            if (r.readyState != 4 || r.status != 200) return;
-            this.setState({users: JSON.parse(r.responseText)});
-        }.bind(this);
-        r.send();
-    },
-    getMessages: function () {
-        var r = new XMLHttpRequest();
-        r.open("GET", "/messages");
-        r.onreadystatechange = function () {
-            if (r.readyState != 4 || r.status != 200) return;
-            this.setState({messages: JSON.parse(r.responseText)});
-        }.bind(this);
-        r.send();
+    componentDidUnmount: function () {
+        AppStore.removeChangeListener(this._onChange);
     },
     connect: function () {
-        var that = this;
-        var socket = new SockJS('/message');
-        this.stompClient = Stomp.over(socket);
-        this.stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            that.setState({connected: true});
-            that.stompClient.subscribe('/chat/messages', function (message) {
-                var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body));
-                that.setState({messages: messages});
-            });
-            that.stompClient.subscribe('/user/chat/messages', function (message) {
-                var messages = that.state.messages.slice(0);
-                messages.push(JSON.parse(message.body));
-                that.setState({messages: messages});
-            });
-            that.stompClient.subscribe('/chat/users', function (message) {
-                var connectionMessage = JSON.parse(message.body);
-                if (connectionMessage.connected) {
-                    that.state.users[connectionMessage.user.name] = connectionMessage.user;
-                } else {
-                    delete that.state.users[connectionMessage.user.name];
-                }
-                that.setState({users: that.state.users});
-            });
-
-            that.getUsers();
-            that.getMessages();
+        WebSocketAPIUtils.connect(function () {
+            WebAPIUtils.getMessages();
+            WebAPIUtils.getUsers();
+            AppActions.websocketConnected();
         });
     },
     disconnect: function () {
-        if (this.stompClient != null) {
-            this.stompClient.disconnect();
-        }
-        this.setState({connected: false});
-        console.log("Disconnected");
+        WebSocketAPIUtils.disconnect(function () {
+            AppActions.websocketDisconnected();
+        });
     },
     handleChatInput: function (event) {
-        this.setState({input: event.target.value});
+        AppActions.chatInputUpdate(event.target.value);
     },
     updateToUser: function (user) {
         var name = user.name === this.state.selectedUser ? '' : user.name;
         return function () {
-            this.setState({selectedUser: name});
-        }.bind(this);
+            AppActions.userSelect(name);
+        };
     },
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        var prefix = '';
-        prefix += this.state.selectedUser.length !== 0 ? '/user/' + this.state.selectedUser : ''
-        var channel = '/message';
-        channel = prefix + channel;
-        this.stompClient.send(channel, {}, JSON.stringify({message: this.state.input}));
-        this.setState({input: ''});
+        if (this.state.selectedUser.length === 0) {
+            AppActions.messageBroadcast({message: this.state.input});
+        } else {
+            AppActions.messageToUser({message: this.state.input}, this.state.selectedUser);
+        }
+        AppActions.chatInputUpdate('');
     },
     render: function () {
         return <div className="chat">
@@ -124,6 +88,9 @@ var App = React.createClass({
                 </div>
             </section>
         </div>;
+    },
+    _onChange: function () {
+        this.setState(AppStore.getState());
     }
 });
 
