@@ -1,11 +1,11 @@
 package no.helleroy.messaging.domain;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 public class ChatMessage implements Serializable {
 
     private String message, sender, receiver;
+    private Channel channel;
 
     public String getMessage() {
         return message;
@@ -31,6 +31,15 @@ public class ChatMessage implements Serializable {
 
     public ChatMessage setReceiver(String receiver) {
         this.receiver = receiver;
+        return this;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public ChatMessage setChannel(Channel channel) {
+        this.channel = channel;
         return this;
     }
 }

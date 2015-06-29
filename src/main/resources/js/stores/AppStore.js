@@ -9,10 +9,11 @@ var CHANGE_EVENT = 'changed';
 var state = {
     messages: [],
     users: [],
+    channels: [],
     connected: false,
     principal: {},
     input: '',
-    channel: {name: 'everyone', isPersonal: false}
+    channel: {name: '', isPersonal: false}
 };
 
 var AppStore = _.assign({}, EventEmitter.prototype, {
@@ -66,6 +67,13 @@ Dispatcher.register(function (action) {
             break;
         case AppConstants.actions.PRINCIPAL_RECEIVE:
             state.principal = action.principal;
+            AppStore.emitChange();
+            break;
+        case AppConstants.actions.CHANNELS_RECEIVE:
+            state.channels = action.channels;
+            if (state.channel.name === '') {
+                state.channel = action.channels[0];
+            }
             AppStore.emitChange();
             break;
         case AppConstants.actions.CHAT_INPUT_UPDATE:

@@ -16,15 +16,25 @@ module.exports = React.createClass({
         AppStore.removeChangeListener(this._onChange);
     },
     updateChannel: function (channel) {
-        var c = this.state.channel.name === channel.name ? {name: 'everyone', isPersonal: false} : channel;
         return function () {
-            AppActions.channelSelect(c);
+            AppActions.channelSelect(channel);
         };
     },
     render: function () {
         return <div className="chat">
             <section className="grid main">
                 <div className="col-1-5 sidebar chat-users">
+                    <h2>Channels</h2>
+                    <ul>
+                        {this.state.channels.map(function (channel) {
+                            return <li key={channel.name}
+                                       className="sidebar-list-element"
+                                       onClick={this.updateChannel({name: channel.name, isPersonal: channel.isPersonal})}>
+                                {channel.name}
+                            </li>
+                        }.bind(this))}
+                    </ul>
+                    <h2>Users</h2>
                     <ul>
                         {Object.keys(this.state.users).map(function (user) {
                             return <li key={user}

@@ -25,5 +25,10 @@ module.exports = {
         ajax('GET', '/login/principal', function (responseText) {
             AppActions.principalReceive(JSON.parse(responseText).principal);
         });
+    },
+    getChannels: function () {
+        ajax('GET', '/channels', function (responseText) {
+            AppActions.channelsReceive(JSON.parse(responseText));
+        });
     }
 };

@@ -39,11 +39,9 @@ var disconnect = function (callback) {
 
 Dispatcher.register(function (action) {
     switch (action.actionType) {
-        case AppConstants.actions.MESSAGE_BROADCAST:
-            stompClient.send('/message', {}, JSON.stringify(action.message));
-            break;
-        case AppConstants.actions.MESSAGE_TO_USER:
-            stompClient.send('/user/' + action.user + '/message', {}, JSON.stringify(action.message));
+        case AppConstants.actions.MESSAGE_SEND:
+            var destination = (action.message.channel.isPersonal ? '/user/' + action.message.channel.name : '') + '/message';
+            stompClient.send(destination, {}, JSON.stringify(action.message));
             break;
     }
 });

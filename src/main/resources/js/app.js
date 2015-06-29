@@ -11,5 +11,6 @@ React.render(<Chat/>, document.getElementById('app'), function () {
         WebAPIUtils.getMessages();
         WebAPIUtils.getUsers();
         WebAPIUtils.getPrincipal();
+        WebAPIUtils.getChannels();
     });
 });

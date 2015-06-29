@@ -10,11 +10,7 @@ module.exports = React.createClass({
     send: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        if (this.props.channel.isPersonal) {
-            AppActions.messageToUser({message: this.props.input}, this.props.channel.name);
-        } else {
-            AppActions.messageBroadcast({message: this.props.input});
-        }
+        AppActions.messageSend({message: this.props.input, channel: this.props.channel});
         AppActions.chatInputUpdate('');
     },
     render: function () {
@@ -27,10 +23,10 @@ module.exports = React.createClass({
                     {this.props.messages
                         .filter(function (message) {
                             if (this.props.channel.isPersonal) {
-                                return this.props.channel.name === message.receiver ||
-                                    (this.props.channel.name === message.sender && this.props.principal.username === message.receiver)
+                                return this.props.channel.name === message.channel.name &&
+                                    (this.props.principal.username === message.receiver || this.props.principal.username === message.sender)
                             } else {
-                                return message.receiver === null;
+                                return this.props.channel.name === message.channel.name;
                             }
                         }.bind(this))
                         .map(function (message, index) {

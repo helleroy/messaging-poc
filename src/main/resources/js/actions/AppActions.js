@@ -12,16 +12,9 @@ module.exports = {
             actionType: AppConstants.actions.WEBSOCKET_DISCONNECTED
         });
     },
-    messageBroadcast: function (message) {
+    messageSend: function (message) {
         Dispatcher.dispatch({
-            actionType: AppConstants.actions.MESSAGE_BROADCAST,
-            message: message
-        });
-    },
-    messageToUser: function (message, user) {
-        Dispatcher.dispatch({
-            actionType: AppConstants.actions.MESSAGE_TO_USER,
-            user: user,
+            actionType: AppConstants.actions.MESSAGE_SEND,
             message: message
         });
     },
@@ -66,6 +59,12 @@ module.exports = {
             actionType: AppConstants.actions.PRINCIPAL_RECEIVE,
             principal: principal
         });
+    },
+    channelsReceive: function (channels) {
+        Dispatcher.dispatch({
+            actionType: AppConstants.actions.CHANNELS_RECEIVE,
+            channels: channels
+        })
     },
     chatInputUpdate: function (input) {
         Dispatcher.dispatch({
