@@ -1,22 +1,29 @@
 var AppActions = require('../actions/AppActions');
 
+function ajax(method, path, callback) {
+    var r = new XMLHttpRequest();
+    r.open(method, path);
+    r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) return;
+        callback(r.responseText);
+    };
+    r.send();
+}
+
 module.exports = {
     getMessages: function () {
-        var r = new XMLHttpRequest();
-        r.open("GET", "/messages");
-        r.onreadystatechange = function () {
-            if (r.readyState != 4 || r.status != 200) return;
-            AppActions.messagesReceive(JSON.parse(r.responseText));
-        };
-        r.send();
+        ajax('GET', '/messages', function (responseText) {
+            AppActions.messagesReceive(JSON.parse(responseText));
+        });
     },
     getUsers: function () {
-        var r = new XMLHttpRequest();
-        r.open("GET", "/users");
-        r.onreadystatechange = function () {
-            if (r.readyState != 4 || r.status != 200) return;
-            AppActions.usersReceive(JSON.parse(r.responseText));
-        };
-        r.send();
+        ajax('GET', '/users', function (responseText) {
+            AppActions.usersReceive(JSON.parse(responseText));
+        });
+    },
+    getPrincipal: function () {
+        ajax('GET', '/login/principal', function (responseText) {
+            AppActions.principalReceive(JSON.parse(responseText).principal);
+        });
     }
 };

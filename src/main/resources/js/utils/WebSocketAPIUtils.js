@@ -25,6 +25,8 @@ var connect = function (callback) {
             }
         });
 
+        AppActions.websocketConnected();
+
         return typeof callback === "function" ? callback() : void 0;
     });
 };

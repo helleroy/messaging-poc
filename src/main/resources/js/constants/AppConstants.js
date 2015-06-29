@@ -10,8 +10,9 @@ module.exports = {
         MESSAGES_RECEIVE: null,
         USER_CONNECT: null,
         USER_DISCONNECT: null,
-        USER_SELECT: null,
+        CHANNEL_SELECT: null,
         USERS_RECEIVE: null,
+        PRINCIPAL_RECEIVE: null,
         CHAT_INPUT_UPDATE: null
     })
 };

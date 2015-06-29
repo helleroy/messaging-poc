@@ -49,16 +49,22 @@ module.exports = {
             user: user
         });
     },
-    userSelect: function (username) {
+    channelSelect: function (channel) {
         Dispatcher.dispatch({
-            actionType: AppConstants.actions.USER_SELECT,
-            username: username
+            actionType: AppConstants.actions.CHANNEL_SELECT,
+            channel: channel
         });
     },
     usersReceive: function (users) {
         Dispatcher.dispatch({
             actionType: AppConstants.actions.USERS_RECEIVE,
             users: users
+        });
+    },
+    principalReceive: function (principal) {
+        Dispatcher.dispatch({
+            actionType: AppConstants.actions.PRINCIPAL_RECEIVE,
+            principal: principal
         });
     },
     chatInputUpdate: function (input) {

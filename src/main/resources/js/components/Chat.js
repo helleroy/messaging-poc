@@ -3,6 +3,8 @@ var React = require('react');
 var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
 
+var ChatChannel = require('./ChatChannel');
+
 module.exports = React.createClass({
     getInitialState: function () {
         return AppStore.getState();
@@ -13,24 +15,11 @@ module.exports = React.createClass({
     componentDidUnmount: function () {
         AppStore.removeChangeListener(this._onChange);
     },
-    handleChatInput: function (event) {
-        AppActions.chatInputUpdate(event.target.value);
-    },
-    updateToUser: function (user) {
-        var name = user.name === this.state.selectedUser ? '' : user.name;
+    updateChannel: function (channel) {
+        var c = this.state.channel.name === channel.name ? {name: 'everyone', isPersonal: false} : channel;
         return function () {
-            AppActions.userSelect(name);
+            AppActions.channelSelect(c);
         };
-    },
-    send: function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        if (this.state.selectedUser.length === 0) {
-            AppActions.messageBroadcast({message: this.state.input});
-        } else {
-            AppActions.messageToUser({message: this.state.input}, this.state.selectedUser);
-        }
-        AppActions.chatInputUpdate('');
     },
     render: function () {
         return <div className="chat">
@@ -40,30 +29,15 @@ module.exports = React.createClass({
                         {Object.keys(this.state.users).map(function (user) {
                             return <li key={user}
                                        className="sidebar-list-element"
-                                       onClick={this.updateToUser(this.state.users[user])}>
+                                       onClick={this.updateChannel({name : this.state.users[user].name, isPersonal: true})}>
                                 {this.state.users[user].name}
                             </li>
                         }.bind(this))}
                     </ul>
                 </div>
+
                 <div className="col-4-5 chat-main">
-                    <div className="grid module chat-messages">
-                        <p className="chat-channel-header">
-                            {this.state.selectedUser.length !== 0 ? '@' + this.state.selectedUser : '#everyone'}
-                        </p>
-                        <ul>
-                            {this.state.messages.map(function (message, index) {
-                                return <li key={index}>{message.sender + ': ' + message.message}</li>
-                            })}
-                        </ul>
-                    </div>
-                    <div className="chat-form-wrapper">
-                        <form className="grid col-4-5 module chat-form" onSubmit={this.send}>
-                            <input type="text" className="textfield textfield-message" value={this.state.input}
-                                   onChange={this.handleChatInput}/>
-                            <input type="submit" className="button button-send" value="Send"/>
-                        </form>
-                    </div>
+                    <ChatChannel {...this.state}/>
                 </div>
             </section>
         </div>;

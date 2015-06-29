@@ -10,6 +10,6 @@ React.render(<Chat/>, document.getElementById('app'), function () {
     WebSocketAPIUtils.connect(function () {
         WebAPIUtils.getMessages();
         WebAPIUtils.getUsers();
-        AppActions.websocketConnected();
+        WebAPIUtils.getPrincipal();
     });
 });

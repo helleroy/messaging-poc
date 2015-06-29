@@ -6,7 +6,14 @@ var AppConstants = require('../constants/AppConstants');
 
 var CHANGE_EVENT = 'changed';
 
-var state = {messages: [], users: [], connected: false, input: '', selectedUser: ''};
+var state = {
+    messages: [],
+    users: [],
+    connected: false,
+    principal: {},
+    input: '',
+    channel: {name: 'everyone', isPersonal: false}
+};
 
 var AppStore = _.assign({}, EventEmitter.prototype, {
     getState: function () {
@@ -53,8 +60,12 @@ Dispatcher.register(function (action) {
             state.connected = false;
             AppStore.emitChange();
             break;
-        case AppConstants.actions.USER_SELECT:
-            state.selectedUser = action.username;
+        case AppConstants.actions.CHANNEL_SELECT:
+            state.channel = action.channel;
+            AppStore.emitChange();
+            break;
+        case AppConstants.actions.PRINCIPAL_RECEIVE:
+            state.principal = action.principal;
             AppStore.emitChange();
             break;
         case AppConstants.actions.CHAT_INPUT_UPDATE:
