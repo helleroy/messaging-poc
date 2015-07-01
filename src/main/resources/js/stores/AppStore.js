@@ -50,6 +50,7 @@ Dispatcher.register(function (action) {
             AppStore.emitChange();
             break;
         case AppConstants.actions.USERS_RECEIVE:
+            delete action.users[state.principal.username];
             state.users = action.users;
             AppStore.emitChange();
             break;
@@ -67,6 +68,7 @@ Dispatcher.register(function (action) {
             break;
         case AppConstants.actions.PRINCIPAL_RECEIVE:
             state.principal = action.principal;
+            delete state.users[action.principal.username];
             AppStore.emitChange();
             break;
         case AppConstants.actions.CHANNELS_RECEIVE:
