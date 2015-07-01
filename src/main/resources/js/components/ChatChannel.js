@@ -23,7 +23,7 @@ module.exports = React.createClass({
                     {this.props.messages
                         .filter(function (message) {
                             if (this.props.channel.isPersonal) {
-                                return this.props.channel.name === message.channel.name &&
+                                return (this.props.channel.name === message.channel.name || this.props.channel.name === message.sender) &&
                                     (this.props.principal.username === message.receiver || this.props.principal.username === message.sender)
                             } else {
                                 return this.props.channel.name === message.channel.name;
