@@ -15,15 +15,6 @@ var jsBuildDir = './src/main/resources/static/js/';
 var lessSrcDir = './src/main/resources/less/';
 var cssBuildDir = './src/main/resources/static/css/';
 
-function handleErrors() {
-    var args = Array.prototype.slice.call(arguments);
-    notify.onError({
-        title: "Compile Error",
-        message: "<%= error %>"
-    }).apply(this, args);
-    this.emit('end'); // Keep gulp from hanging on this task
-}
-
 function createBrowserify() {
     return browserify({
         entries: [jsSrcDir + 'app.js'],
@@ -34,11 +25,13 @@ function createBrowserify() {
 
 gulp.task('script-build', function () {
     gutil.log('Compiling scripts...');
+    var start = new Date();
     createBrowserify().bundle()
-        .on('error', handleErrors)
+        .on('error', notify.onError({message: '<%= error.message %>'}))
         .pipe(source('app.js'))
         .pipe(streamify(uglify()))
-        .pipe(gulp.dest(jsBuildDir));
+        .pipe(gulp.dest(jsBuildDir))
+        .pipe(notify('Build completed in ' + (new Date() - start) + 'ms.'));
 });
 
 gulp.task('style', function () {
@@ -52,10 +45,12 @@ gulp.task('style', function () {
 
 gulp.task('script-dev', function () {
     gutil.log('Compiling scripts...');
+    var start = new Date();
     createBrowserify().bundle()
-        .on('error', handleErrors)
+        .on('error', notify.onError({message: '<%= error.message %>'}))
         .pipe(source('app.js'))
-        .pipe(gulp.dest(jsBuildDir));
+        .pipe(gulp.dest(jsBuildDir))
+        .pipe(notify('Build completed in ' + (new Date() - start) + 'ms.'));
 });
 
 gulp.task('watch', ['script-dev', 'style'], function () {
