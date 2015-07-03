@@ -14,8 +14,8 @@ public class ChannelController {
     @RequestMapping
     public List<Channel> channels() {
         ArrayList<Channel> channels = new ArrayList<>();
-        channels.add(new Channel().setName("general").setIsPersonal(false));
-        channels.add(new Channel().setName("random").setIsPersonal(false));
+        channels.add(new Channel().setName("general").setPersonal(false));
+        channels.add(new Channel().setName("random").setPersonal(false));
         return channels;
     }
 }

@@ -2,7 +2,7 @@ package no.helleroy.messaging.domain;
 
 public class Channel {
     private String name;
-    private boolean isPersonal;
+    private boolean personal;
 
     public String getName() {
         return name;
@@ -14,11 +14,11 @@ public class Channel {
     }
 
     public boolean isPersonal() {
-        return isPersonal;
+        return personal;
     }
 
-    public Channel setIsPersonal(boolean isPersonal) {
-        this.isPersonal = isPersonal;
+    public Channel setPersonal(boolean personal) {
+        this.personal = personal;
         return this;
     }
 }

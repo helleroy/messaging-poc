@@ -17,12 +17,12 @@ module.exports = React.createClass({
         return <div className="chat-channel">
             <div className="grid module chat-messages">
                 <p className="chat-channel-header">
-                    {(this.props.channel.isPersonal ? '@' : '#') + this.props.channel.name}
+                    {(this.props.channel.personal ? '@' : '#') + this.props.channel.name}
                 </p>
                 <ul>
                     {this.props.messages
                         .filter(function (message) {
-                            if (this.props.channel.isPersonal) {
+                            if (this.props.channel.personal) {
                                 return (this.props.channel.name === message.channel.name || this.props.channel.name === message.sender) &&
                                     (this.props.principal.username === message.receiver || this.props.principal.username === message.sender)
                             } else {

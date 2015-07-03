@@ -5,6 +5,20 @@
     padding: 0.5rem 1rem;
     &:hover {
       background-color: #333333;
+      color: #ffffff;
     }
+  }
+  .new-message {
+    color: #333333;
+    @keyframes flash {
+      to {
+        color: #333333;
+        background-color: #ffeeaa;
+      }
+    }
+    animation-duration: 2s;
+    animation-name: flash;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
   }
 }

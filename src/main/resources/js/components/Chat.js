@@ -27,9 +27,10 @@ module.exports = React.createClass({
                     <h2>Channels</h2>
                     <ul>
                         {this.state.channels.map(function (channel) {
+                            var className = 'sidebar-list-element' + (channel.newMessage ? ' new-message' : '');
                             return <li key={channel.name}
-                                       className="sidebar-list-element"
-                                       onClick={this.updateChannel({name: channel.name, isPersonal: channel.isPersonal})}>
+                                       className={className}
+                                       onClick={this.updateChannel({name: channel.name, personal: channel.personal})}>
                                 {channel.name}
                             </li>
                         }.bind(this))}
@@ -37,9 +38,10 @@ module.exports = React.createClass({
                     <h2>Users</h2>
                     <ul>
                         {Object.keys(this.state.users).map(function (user) {
+                            var className = 'sidebar-list-element' + (this.state.users[user].newMessage ? ' new-message' : '');
                             return <li key={user}
-                                       className="sidebar-list-element"
-                                       onClick={this.updateChannel({name : this.state.users[user].name, isPersonal: true})}>
+                                       className={className}
+                                       onClick={this.updateChannel({name : user, personal: true})}>
                                 {this.state.users[user].name}
                             </li>
                         }.bind(this))}

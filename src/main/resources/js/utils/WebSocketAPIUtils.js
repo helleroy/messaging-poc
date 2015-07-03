@@ -40,7 +40,7 @@ var disconnect = function (callback) {
 Dispatcher.register(function (action) {
     switch (action.actionType) {
         case AppConstants.actions.MESSAGE_SEND:
-            var destination = (action.message.channel.isPersonal ? '/user/' + action.message.channel.name : '') + '/message';
+            var destination = (action.message.channel.personal ? '/user/' + action.message.channel.name : '') + '/message';
             stompClient.send(destination, {}, JSON.stringify(action.message));
             break;
     }

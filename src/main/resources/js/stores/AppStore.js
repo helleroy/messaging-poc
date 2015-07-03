@@ -13,7 +13,7 @@ var state = {
     connected: false,
     principal: {},
     input: '',
-    channel: {name: '', isPersonal: false}
+    channel: {name: '', personal: false}
 };
 
 var AppStore = _.assign({}, EventEmitter.prototype, {
@@ -31,58 +31,80 @@ var AppStore = _.assign({}, EventEmitter.prototype, {
     }
 });
 
+function markChannelNewMessage(channel, mark) {
+    return state.channel.name === channel.name ?
+        state.channels :
+        state.channels.map(function (c) {
+            if (c.name === channel.name) {
+                return _.assign({}, c, {newMessage: mark});
+            }
+            return c;
+        });
+}
+
+function markUserNewMessage(username, mark) {
+    if (state.channel.name !== username && username in state.users) {
+        state.users[username] = _.assign({}, state.users[username], {newMessage: mark});
+    }
+    return state.users;
+}
+
 Dispatcher.register(function (action) {
     switch (action.actionType) {
         case AppConstants.actions.MESSAGE_RECEIVE:
+            if (action.message.channel.personal) {
+                state.users = markUserNewMessage(action.message.sender, true);
+            } else {
+                state.channels = markChannelNewMessage(action.message.channel, true);
+            }
             state.messages.push(action.message);
-            AppStore.emitChange();
             break;
         case AppConstants.actions.MESSAGES_RECEIVE:
             state.messages = action.messages;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.USER_CONNECT:
             state.users[action.user.name] = action.user;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.USER_DISCONNECT:
             delete state.users[action.user.name];
-            AppStore.emitChange();
             break;
         case AppConstants.actions.USERS_RECEIVE:
             delete action.users[state.principal.username];
             state.users = action.users;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.WEBSOCKET_CONNECTED:
             state.connected = true;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.WEBSOCKET_DISCONNECTED:
             state.connected = false;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.CHANNEL_SELECT:
+            if (action.channel.personal) {
+                state.users = markUserNewMessage(action.channel.name, false);
+            } else {
+                state.channels = markChannelNewMessage(action.channel, false);
+            }
             state.channel = action.channel;
-            AppStore.emitChange();
             break;
         case AppConstants.actions.PRINCIPAL_RECEIVE:
             state.principal = action.principal;
             delete state.users[action.principal.username];
-            AppStore.emitChange();
             break;
         case AppConstants.actions.CHANNELS_RECEIVE:
             state.channels = action.channels;
             if (state.channel.name === '') {
                 state.channel = action.channels[0];
             }
-            AppStore.emitChange();
             break;
         case AppConstants.actions.CHAT_INPUT_UPDATE:
             state.input = action.input;
-            AppStore.emitChange();
             break;
+        default:
+            return;
     }
+
+    AppStore.emitChange();
+
 });
 
 module.exports = AppStore;
