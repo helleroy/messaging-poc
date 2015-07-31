@@ -12,11 +12,11 @@ public class ChatController extends InboundClient<ChatMessage> {
 
     @MessageMapping("/message")
     public void message(ChatMessage message, Principal principal) {
-        publish(message.setSender(principal.getName()));
+        publish((ChatMessage) message.setSender(principal.getName()));
     }
 
     @MessageMapping("/user/{username}/message")
     public void messageToUser(@DestinationVariable String username, ChatMessage message, Principal principal) {
-        publish(message.setSender(principal.getName()).setReceiver(username));
+        publish((ChatMessage) message.setSender(principal.getName()).setReceiver(username));
     }
 }

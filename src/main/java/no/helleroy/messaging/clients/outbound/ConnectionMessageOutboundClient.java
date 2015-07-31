@@ -7,8 +7,6 @@ import no.helleroy.messaging.stores.UserStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Consumer;
-
 @Component
 public class ConnectionMessageOutboundClient extends OutboundClient<ConnectionMessage> {
 
@@ -28,9 +26,5 @@ public class ConnectionMessageOutboundClient extends OutboundClient<ConnectionMe
     @Override
     public void subscribe(Publisher<ConnectionMessage> publisher) {
         publisher.register(this::publish);
-    }
-
-    @Override
-    public void register(Consumer<ConnectionMessage> consumer) {
     }
 }

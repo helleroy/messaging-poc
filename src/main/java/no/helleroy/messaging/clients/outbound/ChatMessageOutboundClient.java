@@ -7,8 +7,6 @@ import no.helleroy.messaging.stores.ChatStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Consumer;
-
 @Component
 public class ChatMessageOutboundClient extends OutboundClient<ChatMessage> {
 
@@ -17,7 +15,7 @@ public class ChatMessageOutboundClient extends OutboundClient<ChatMessage> {
     @Autowired
     public ChatMessageOutboundClient(ChatService chatService, ChatStore chatStore) {
         this.chatService = chatService;
-        chatStore.register(this::publish);
+        subscribe(chatStore);
     }
 
     @Override
@@ -35,9 +33,5 @@ public class ChatMessageOutboundClient extends OutboundClient<ChatMessage> {
         } else {
             chatService.broadcast(message);
         }
-    }
-
-    @Override
-    public void register(Consumer<ChatMessage> consumer) {
     }
 }
