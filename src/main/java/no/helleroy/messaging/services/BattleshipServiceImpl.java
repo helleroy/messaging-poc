@@ -3,7 +3,9 @@ package no.helleroy.messaging.services;
 import no.helleroy.messaging.domain.BattleshipMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BattleshipServiceImpl implements BattleshipService {
 
     public static final String DESTINATION_BATTLESHIP = "/game/battleship";
